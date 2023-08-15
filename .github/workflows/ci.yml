@@ -50,6 +50,7 @@ jobs:
         
   publish:
     needs: BumpVersion
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Upload release to PyPI
     runs-on: ubuntu-latest
     environment:
@@ -58,6 +59,11 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing
     steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
       - name: Build distributable package
         run: |
           pip install poetry
