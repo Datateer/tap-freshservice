@@ -8,8 +8,7 @@ class GroupsStream(FreshserviceStream):
     path = "/groups"
     records_jsonpath="$.groups[*]"
 
-    def get_url(self, context: dict |
-     None):
+    def get_url(self, context: dict):
         url = super().get_url(context)
         return url
     
