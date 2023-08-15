@@ -51,6 +51,7 @@ jobs:
   publish:
     needs: BumpVersion
     name: Upload release to PyPI
+    runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/tap-freshservice
