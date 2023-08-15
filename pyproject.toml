@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "Datateer-tap-freshservice"
-version = "0.1.0"
+version = "0.1.1"
 description = "`tap-freshservice` is a Singer tap for Freshservice, built with the Meltano Singer SDK."
 readme = "README.md"
 authors = ["Datateer Dev"]

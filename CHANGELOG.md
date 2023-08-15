@@ -2,6 +2,13 @@
 
 
 
+## v0.1.1 (2023-08-15)
+
+### Fix
+
+* fix: build package ([`d2ddd0c`](https://github.com/Datateer/tap-freshservice/commit/d2ddd0ca36276ad9c45f51b1c37ec92d3b30a5c4))
+
+
 ## v0.1.0 (2023-08-15)
 
 ### Feature
