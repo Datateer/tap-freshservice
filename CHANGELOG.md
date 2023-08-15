@@ -2,6 +2,15 @@
 
 
 
+## v0.1.2 (2023-08-15)
+
+### Fix
+
+* fix: fix indentation ([`5a13929`](https://github.com/Datateer/tap-freshservice/commit/5a13929ac6118e18d0d711b55f44030c443038ef))
+
+* fix: checkout action ([`942a4d1`](https://github.com/Datateer/tap-freshservice/commit/942a4d12767ebaeaab263aeff7b5ec7faf91bebb))
+
+
 ## v0.1.1 (2023-08-15)
 
 ### Fix
