@@ -2,6 +2,17 @@
 
 
 
+## v0.2.0 (2023-08-15)
+
+### Feature
+
+* feat: backoff to handle rate limit response codes ([`6e60bfc`](https://github.com/Datateer/tap-freshservice/commit/6e60bfce15a100271c4b82382ee334333778b16b))
+
+### Unknown
+
+* Merge branch &#39;main&#39; of github.com:Datateer/tap-freshservice ([`4c85ecc`](https://github.com/Datateer/tap-freshservice/commit/4c85ecc8a21affa7994e3a63e36dd66b008e1365))
+
+
 ## v0.1.4 (2023-08-15)
 
 ### Fix
