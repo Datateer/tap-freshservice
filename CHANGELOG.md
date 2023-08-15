@@ -2,6 +2,13 @@
 
 
 
+## v0.1.4 (2023-08-15)
+
+### Fix
+
+* fix: version bump ([`7f6a247`](https://github.com/Datateer/tap-freshservice/commit/7f6a2477e9a412e86c78cad0071546ba403dd2c1))
+
+
 ## v0.1.3 (2023-08-15)
 
 ### Fix
