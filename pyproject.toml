@@ -14,7 +14,7 @@ packages = [
 ]
 
 [tool.semantic_release]
-version_variables = ["setup.py:__version__"]
+version_toml = ["pyproject.toml:tool.poetry.version",]
 
 [tool.poetry.dependencies]
 python = "<3.12,>=3.7.1"
