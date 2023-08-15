@@ -5,8 +5,7 @@ from __future__ import annotations
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
-# TODO: Import your custom stream types here:
-from tap_freshservice import streams
+from tap_freshservice.streams import (groups, tickets)
 
 
 class TapFreshservice(Tap):
@@ -14,43 +13,38 @@ class TapFreshservice(Tap):
 
     name = "tap-freshservice"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "auth_token",
+            "api_key",
             th.StringType,
             required=True,
             secret=True,  # Flag config as protected.
-            description="The token to authenticate against the API service",
+            description="The Freshservice API key",
         ),
         th.Property(
-            "project_ids",
-            th.ArrayType(th.StringType),
-            required=True,
-            description="Project IDs to replicate",
-        ),
-        th.Property(
-            "start_date",
+            "updated_since",
             th.DateTimeType,
-            description="The earliest record date to sync",
+            description="The earliest record date to sync. You probably need this! The Freshservice API only returns items less than 30 days old. To override this, you must include an 'updated_since' value in the URL querystring. Providing a value here will ensure this value is used if there is no state (i.e. for a full refresh). ",
+            default="2000-01-01T00:00:00Z"
         ),
         th.Property(
-            "api_url",
+            "base_url",
             th.StringType,
-            default="https://api.mysample.com",
-            description="The url for the API service",
+            required=True,
+            default="https://<replace with your org>.freshservice.com/api/v2",
+            description="The url for the Freshservice API",
         ),
     ).to_dict()
 
-    def discover_streams(self) -> list[streams.FreshserviceStream]:
+    def discover_streams(self) -> list[tickets.FreshserviceStream]:
         """Return a list of discovered streams.
 
         Returns:
             A list of discovered streams.
         """
         return [
-            streams.GroupsStream(self),
-            streams.UsersStream(self),
+            tickets.TicketsStream(self),
+            groups.GroupsStream(self),
         ]
 
 

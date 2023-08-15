@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any, Iterable
+from urllib.parse import parse_qsl
 
 import requests
 from singer_sdk.authenticators import BasicAuthenticator
@@ -11,9 +11,7 @@ from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import BaseAPIPaginator  # noqa: TCH002
 from singer_sdk.streams import RESTStream
 
-_Auth = Callable[[requests.PreparedRequest], requests.PreparedRequest]
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-
+from tap_freshservice.paginator import FreshservicePaginator
 
 class FreshserviceStream(RESTStream):
     """Freshservice stream class."""
@@ -21,13 +19,7 @@ class FreshserviceStream(RESTStream):
     @property
     def url_base(self) -> str:
         """Return the API URL root, configurable via tap settings."""
-        # TODO: hardcode a value here, or retrieve it from self.config
-        return "https://api.mysample.com"
-
-    records_jsonpath = "$[*]"  # Or override `parse_response`.
-
-    # Set this value or override `get_new_paginator`.
-    next_page_token_jsonpath = "$.next_page"  # noqa: S105
+        return self.config.get('url_base')  
 
     @property
     def authenticator(self) -> BasicAuthenticator:
@@ -38,8 +30,8 @@ class FreshserviceStream(RESTStream):
         """
         return BasicAuthenticator.create_for_stream(
             self,
-            username=self.config.get("username", ""),
-            password=self.config.get("password", ""),
+            username=self.config.get("api_key"),
+            password="X",
         )
 
     @property
@@ -58,18 +50,10 @@ class FreshserviceStream(RESTStream):
 
     def get_new_paginator(self) -> BaseAPIPaginator:
         """Create a new pagination helper instance.
-
-        If the source API can make use of the `next_page_token_jsonpath`
-        attribute, or it contains a `X-Next-Page` header in the response
-        then you can remove this method.
-
-        If you need custom pagination that uses page numbers, "next" links, or
-        other approaches, please read the guide: https://sdk.meltano.com/en/v0.25.0/guides/pagination-classes.html.
-
         Returns:
             A pagination helper instance.
         """
-        return super().get_new_paginator()
+        return FreshservicePaginator()
 
     def get_url_params(
         self,
@@ -87,56 +71,41 @@ class FreshserviceStream(RESTStream):
         """
         params: dict = {}
         if next_page_token:
-            params["page"] = next_page_token
-        if self.replication_key:
-            params["sort"] = "asc"
-            params["order_by"] = self.replication_key
+            params["page"] = dict(parse_qsl(next_page_token.query)).get('page')
+
         return params
 
-    def prepare_request_payload(
+
+
+class FreshserviceIncrementalStream(FreshserviceStream):
+    replication_key = "updated_at"
+    is_sorted = True
+
+    def get_url_params(
         self,
         context: dict | None,  # noqa: ARG002
-        next_page_token: Any | None,  # noqa: ARG002, ANN401
-    ) -> dict | None:
-        """Prepare the data payload for the REST API request.
-
-        By default, no payload will be sent (return None).
+        next_page_token: Any | None,  # noqa: ANN401
+    ) -> dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization.
 
         Args:
             context: The stream context.
             next_page_token: The next page index or value.
 
         Returns:
-            A dictionary with the JSON body for a POST requests.
+            A dictionary of URL query parameters.
         """
-        # TODO: Delete this method if no payload is required. (Most REST APIs.)
-        return None
+        params: dict = {}
+        if self.replication_key:
+            params["order_type"] = "asc"
+            params["order_by"] = self.replication_key
+            starting_timestamp = self.get_starting_timestamp(context)
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        """Parse the response and return an iterator of result records.
+            # By default only tickets that have been created within the past 30 days will be returned. For older tickets, use the updated_since filter.
+            if starting_timestamp:
+                params["updated_since"] = starting_timestamp.isoformat()
+            elif self.config.get('updated_since') is not None:
+                params["updated_since"] = self.config.get('updated_since')
 
-        Args:
-            response: The HTTP ``requests.Response`` object.
-
-        Yields:
-            Each record from the source.
-        """
-        # TODO: Parse response body and return a set of records.
-        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
-
-    def post_process(
-        self,
-        row: dict,
-        context: dict | None = None,  # noqa: ARG002
-    ) -> dict | None:
-        """As needed, append or transform raw data to match expected structure.
-
-        Args:
-            row: An individual record from the stream.
-            context: The stream context.
-
-        Returns:
-            The updated record dictionary, or ``None`` to skip the record.
-        """
-        # TODO: Delete this method if not needed.
-        return row
+        params.update(super().get_url_params(context, next_page_token))
+        return params

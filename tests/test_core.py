@@ -6,9 +6,10 @@ from singer_sdk.testing import get_tap_test_class
 
 from tap_freshservice.tap import TapFreshservice
 
+
 SAMPLE_CONFIG = {
-    "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    # TODO: Initialize minimal tap config
+    "api_key": "testing",
+    "url_base": "https://testing.com"
 }
 
 
@@ -18,5 +19,3 @@ TestTapFreshservice = get_tap_test_class(
     config=SAMPLE_CONFIG,
 )
 
-
-# TODO: Create additional tests as appropriate for your tap.
