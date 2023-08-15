@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any, Iterable
 from urllib.parse import parse_qsl
 
+import backoff
 import requests
 from singer_sdk.authenticators import BasicAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
@@ -48,6 +49,16 @@ class FreshserviceStream(RESTStream):
         # headers["Private-Token"] = self.config.get("auth_token")  # noqa: ERA001
         return headers
 
+
+    def backoff_wait_generator(self):
+        """Try again every 10 seconds if we hit the 429 rate limit response code"""
+        return backoff.constant(interval=10)
+
+
+    def backoff_max_tries(self) -> int:
+        """retry 6 times, because the rate limit is per minute. This will guarantee to not hard fail, because after 60 seconds maximum, the rate limit resets"""
+        return 6
+
     def get_new_paginator(self) -> BaseAPIPaginator:
         """Create a new pagination helper instance.
         Returns:
@@ -69,7 +80,8 @@ class FreshserviceStream(RESTStream):
         Returns:
             A dictionary of URL query parameters.
         """
-        params: dict = {}
+        # 100 is the max page size https://api.freshservice.com/#pagination
+        params: dict = {"per_page": "100"}
         if next_page_token:
             params["page"] = dict(parse_qsl(next_page_token.query)).get('page')
 
