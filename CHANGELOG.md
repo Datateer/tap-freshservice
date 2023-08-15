@@ -2,6 +2,25 @@
 
 
 
+## v0.1.3 (2023-08-15)
+
+### Fix
+
+* fix: permissions ([`a68ec2b`](https://github.com/Datateer/tap-freshservice/commit/a68ec2bfe43ab4892764d9acbeae0c3968f77d1a))
+
+* fix: permissions ([`b960e4f`](https://github.com/Datateer/tap-freshservice/commit/b960e4f2ce8eeb38b118eedd311f6cfca1d8c4b6))
+
+### Unknown
+
+* make work with python 3.9 ([`f08eb21`](https://github.com/Datateer/tap-freshservice/commit/f08eb21b5d37055f55d82712d681494f710266d6))
+
+* correct package name ([`057ca1d`](https://github.com/Datateer/tap-freshservice/commit/057ca1dace4cfb40780f86259bea828840e391b1))
+
+* Merge branch &#39;main&#39; of github.com:Datateer/tap-freshservice ([`50cfef2`](https://github.com/Datateer/tap-freshservice/commit/50cfef2b0ec6471bb9328d697b8e89778301251c))
+
+* version 3.10 ([`3b0e757`](https://github.com/Datateer/tap-freshservice/commit/3b0e75733d2955414a703ef8ae307ca80e83c3d3))
+
+
 ## v0.1.2 (2023-08-15)
 
 ### Fix
