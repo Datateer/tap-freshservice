@@ -2,6 +2,21 @@
 
 
 
+## v0.3.0 (2023-11-02)
+
+### Feature
+
+* feat: Added Asset stream ([`99ed63f`](https://github.com/Datateer/tap-freshservice/commit/99ed63f3eda4dd99141a5b24936727a9216b2df4))
+
+### Unknown
+
+* Merge pull request #9 from Datateer/add-assets
+
+Add assets ([`dc6fea9`](https://github.com/Datateer/tap-freshservice/commit/dc6fea9b463989e6593c12cf12579595b38104dd))
+
+* Updated config ([`14984a1`](https://github.com/Datateer/tap-freshservice/commit/14984a144d0f5c9e254dc27e98b0fc9b485b19bb))
+
+
 ## v0.2.0 (2023-08-15)
 
 ### Feature
