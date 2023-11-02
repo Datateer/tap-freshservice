@@ -2,9 +2,20 @@
 
 
 
+## v0.4.0 (2023-11-02)
+
+### Unknown
+
+* Merge pull request #10 from Datateer/add-asset-types
+
+Add asset types ([`539b6ee`](https://github.com/Datateer/tap-freshservice/commit/539b6ee71f9c5d77e41a0b44ec448b9cfb6df524))
+
+
 ## v0.3.0 (2023-11-02)
 
 ### Feature
+
+* feat: added asset type stream ([`9ffe1fa`](https://github.com/Datateer/tap-freshservice/commit/9ffe1fa89f69a64c8aff5e5cbb002b1106aaa630))
 
 * feat: Added Asset stream ([`99ed63f`](https://github.com/Datateer/tap-freshservice/commit/99ed63f3eda4dd99141a5b24936727a9216b2df4))
 
