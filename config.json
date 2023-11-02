@@ -1,0 +1,4 @@
+{
+    "api_key": "<api key here>",
+    "url_base": "https://<company here>.freshservice.com/api/v2"
+}
