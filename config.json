@@ -1,4 +1,4 @@
 {
-    "api_key": "oB66sdLxJI1FMCZygouX",
-    "url_base": "https://datateer.freshservice.com/api/v2"
+    "api_key": "<api key here>",
+    "url_base": "https://<company here>.freshservice.com/api/v2"
 }
