@@ -1,6 +1,6 @@
 """Stream type classes for tap-freshservice."""
 from singer_sdk import typing as th  # JSON Schema typing helpers
-
+from typing import Optional
 from tap_freshservice.client import FreshserviceStream
 
 class AssetsStream(FreshserviceStream):
@@ -15,7 +15,14 @@ class AssetsStream(FreshserviceStream):
     def build_prepared_request(self, *args, **kwargs):
         req = super().build_prepared_request(*args, **kwargs)
         return req
-
+    
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for the child streams.
+        Refer to https://sdk.meltano.com/en/latest/parent_streams.html"""
+        return {"display_id": record["display_id"],
+                "asset_id": record["id"]
+            }
+    
     schema = th.PropertiesList(
         th.Property("id", th.IntegerType),
         th.Property("display_id", th.IntegerType),
