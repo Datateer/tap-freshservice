@@ -2,6 +2,19 @@
 
 
 
+## v0.5.0 (2023-11-03)
+
+### Feature
+
+* feat: add asset request stream ([`e83bf00`](https://github.com/Datateer/tap-freshservice/commit/e83bf003f42211cfd39cb6ebeffc17a3204bca34))
+
+### Unknown
+
+* Merge pull request #11 from Datateer/add-asset-requests
+
+feat: add asset request stream ([`bb5188a`](https://github.com/Datateer/tap-freshservice/commit/bb5188a7229731f714fcf64a3ea333904723c5ab))
+
+
 ## v0.4.0 (2023-11-02)
 
 ### Unknown
