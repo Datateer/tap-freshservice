@@ -2,6 +2,19 @@
 
 
 
+## v0.6.1 (2023-12-01)
+
+### Fix
+
+* fix: Updated typing ([`7b88e4a`](https://github.com/Datateer/tap-freshservice/commit/7b88e4aab94b7c61e9c72037e7710e393f7378c5))
+
+### Unknown
+
+* Merge pull request #14 from Datateer/add-new-endpoints
+
+fix: Updated typing ([`19f0b70`](https://github.com/Datateer/tap-freshservice/commit/19f0b7029491bab22050ba8bf0a72e160451d20b))
+
+
 ## v0.6.0 (2023-12-01)
 
 ### Feature
