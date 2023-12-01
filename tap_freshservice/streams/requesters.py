@@ -8,14 +8,6 @@ class RequestersStream(FreshserviceStream):
     path = "/requesters"
     records_jsonpath="$.requesters[*]"
 
-    def get_url(self, context: dict):
-        url = super().get_url(context)
-        return url
-    
-    def build_prepared_request(self, *args, **kwargs):
-        req = super().build_prepared_request(*args, **kwargs)
-        return req
-
     schema = th.PropertiesList(
         th.Property("active", th.BooleanType),
         th.Property("address", th.StringType),

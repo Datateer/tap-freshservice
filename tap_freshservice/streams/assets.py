@@ -7,14 +7,6 @@ class AssetsStream(FreshserviceStream):
     name = "assets"
     path = "/assets?workspace_id=0"
     records_jsonpath="$.assets[*]"
-
-    def get_url(self, context: dict):
-        url = super().get_url(context)
-        return url
-    
-    def build_prepared_request(self, *args, **kwargs):
-        req = super().build_prepared_request(*args, **kwargs)
-        return req
     
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
         """Return a context dictionary for the child streams.
