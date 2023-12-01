@@ -3,31 +3,31 @@ send_anonymous_usage_stats: true
 project_id: "tap-freshservice"
 default_environment: test
 environments:
-- name: test
+  - name: test
 plugins:
   extractors:
-  - name: "tap-freshservice"
-    namespace: "tap_freshservice"
-    pip_url: -e .
-    capabilities:
-    - state
-    - catalog
-    - discover
-    - about
-    - stream-maps
-    config:
-      api_key: $TAP_FRESHSERVICE_API_KEY
-      url_base: https://datateer.freshservice.com/api/v2
-      # start_date: '2023-08-14T20:00:00Z'
-      start_date: '2000-08-14T20:00:00Z'
-      # flattening_enabled: true
-      # flattening_max_depth: 3
-    settings:
-    - name: api_key
-      kind: password
-    - name: updated_since
-    - name: base_url
+    - name: "tap-freshservice"
+      namespace: "tap_freshservice"
+      pip_url: -e .
+      capabilities:
+        - state
+        - catalog
+        - discover
+        - about
+        - stream-maps
+      config:
+        api_key: $TAP_FRESHSERVICE_API_KEY
+        url_base: https://datateer.freshservice.com/api/v2
+        # start_date: '2023-08-14T20:00:00Z'
+        start_date: "2000-08-14T20:00:00Z"
+        flattening_enabled: true
+        flattening_max_depth: 3
+      settings:
+        - name: api_key
+          kind: password
+        - name: updated_since
+        - name: base_url
   loaders:
-  - name: target-jsonl
-    variant: andyh1203
-    pip_url: target-jsonl
+    - name: target-jsonl
+      variant: andyh1203
+      pip_url: target-jsonl
