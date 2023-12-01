@@ -2,6 +2,23 @@
 
 
 
+## v0.6.0 (2023-12-01)
+
+### Feature
+
+* feat: Add endpoints ([`6e83377`](https://github.com/Datateer/tap-freshservice/commit/6e833776c8b165b183afb9defdc5523bf33cc9dd))
+
+* feat: Add new endpoints ([`2076db0`](https://github.com/Datateer/tap-freshservice/commit/2076db0e7777bf8133ab9e16a69a865cf6aca8eb))
+
+### Unknown
+
+* Merge pull request #13 from Datateer/add-new-endpoints
+
+feat: Add new endpoints ([`ed7b527`](https://github.com/Datateer/tap-freshservice/commit/ed7b527486d624f303735327b06f04575337ecdc))
+
+* Updated streams ([`64eef59`](https://github.com/Datateer/tap-freshservice/commit/64eef59ac082599e251cb10c8e1293c161fb8fe6))
+
+
 ## v0.5.0 (2023-11-03)
 
 ### Feature
