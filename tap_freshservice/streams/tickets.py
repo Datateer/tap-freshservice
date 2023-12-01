@@ -6,7 +6,6 @@ import typing as t
 from pathlib import Path
 from urllib.parse import urlencode
 
-import requests
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 from tap_freshservice.client import FreshserviceIncrementalStream
