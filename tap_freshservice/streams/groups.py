@@ -27,6 +27,6 @@ class GroupsStream(FreshserviceStream):
         th.Property("updated_at", th.DateTimeType),
         th.Property("auto_ticket_assign", th.BooleanType),
         th.Property("ocs_schedule_id", th.IntegerType),
-        th.Property("members", th.ArrayType(th.IntegerType)),
+        th.Property("members", th.StringType),
     ).to_dict()
 
