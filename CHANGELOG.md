@@ -2,6 +2,19 @@
 
 
 
+## v0.7.0 (2024-01-03)
+
+### Feature
+
+* feat: Added properties to Assets stream ([`a948ac5`](https://github.com/Datateer/tap-freshservice/commit/a948ac5540dcbde2c1e6ddf7eb440b62ce16310c))
+
+### Unknown
+
+* Merge pull request #15 from Datateer/type-fields
+
+feat: Added properties to Assets stream ([`59689c2`](https://github.com/Datateer/tap-freshservice/commit/59689c2f5daa697ba1d4c1563732e7d5ad8a630c))
+
+
 ## v0.6.1 (2023-12-01)
 
 ### Fix
