@@ -53,6 +53,7 @@ class TicketsStream(FreshserviceIncrementalStream):
         th.Property("description", th.StringType),
         th.Property("description_text", th.StringType),
         th.Property("custom_fields", th.ObjectType(
+            th.Property("credit_hrs", th.StringType),
             th.Property("estimate", th.StringType),
             th.Property("pending_reason", th.StringType),
             th.Property("quote_hrs", th.StringType),
