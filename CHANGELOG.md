@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.0 (2025-01-29)
+
+### Features
+
+- Add departments
+  ([`538ddf4`](https://github.com/Datateer/tap-freshservice/commit/538ddf40f99b249afe39979269c19c4ff873f58f))
+
+
 ## v0.8.0 (2024-11-27)
 
 ### Features
@@ -91,11 +99,11 @@
 
 ### Bug Fixes
 
-- Fix indentation
-  ([`5a13929`](https://github.com/Datateer/tap-freshservice/commit/5a13929ac6118e18d0d711b55f44030c443038ef))
-
 - Checkout action
   ([`942a4d1`](https://github.com/Datateer/tap-freshservice/commit/942a4d12767ebaeaab263aeff7b5ec7faf91bebb))
+
+- Fix indentation
+  ([`5a13929`](https://github.com/Datateer/tap-freshservice/commit/5a13929ac6118e18d0d711b55f44030c443038ef))
 
 
 ## v0.1.1 (2023-08-15)
@@ -110,11 +118,11 @@
 
 ### Bug Fixes
 
-- Toml versioning
-  ([`5dd48b2`](https://github.com/Datateer/tap-freshservice/commit/5dd48b20d38018d05597eb8f222bc55b5926634a))
-
 - Runs-on
   ([`4fc3914`](https://github.com/Datateer/tap-freshservice/commit/4fc39142ca0b89edc3e99ac8bc588f1239be424f))
+
+- Toml versioning
+  ([`5dd48b2`](https://github.com/Datateer/tap-freshservice/commit/5dd48b20d38018d05597eb8f222bc55b5926634a))
 
 - Version setup
   ([`3f5b880`](https://github.com/Datateer/tap-freshservice/commit/3f5b8801fd4950b93524aafac7c290dbc585f006))
