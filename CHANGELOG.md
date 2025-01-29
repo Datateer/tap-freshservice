@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.10.0 (2025-01-29)
+
+### Features
+
+- Added tags to tickets
+  ([`bec7ec3`](https://github.com/Datateer/tap-freshservice/commit/bec7ec3c62ee1f8c8fa39fca47090c031acf7903))
+
+
 ## v0.9.0 (2025-01-29)
 
 ### Features
