@@ -17,7 +17,7 @@ class TicketsStream(FreshserviceIncrementalStream):
 
     def get_url_params(self, context: dict | None, next_page_token) -> dict[str, t.Any] | str:
         parent_params = super().get_url_params(context, next_page_token)
-        params = {"include": "stats"}
+        params = {"include": "stats,tags"}
         params.update(parent_params)
         return params
 
@@ -78,7 +78,8 @@ class TicketsStream(FreshserviceIncrementalStream):
             th.Property("requester_responded_at", th.DateTimeType),
             th.Property("first_responded_at", th.DateTimeType),
             th.Property("first_resp_time_in_secs", th.IntegerType),
-            th.Property("resolution_time_in_secs", th.IntegerType)
-        ))
+            th.Property("resolution_time_in_secs", th.IntegerType),
+        )),
+        th.Property("tags", th.StringType)
     ).to_dict()
 
