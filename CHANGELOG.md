@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.10.1 (2025-01-30)
+
+### Bug Fixes
+
+- Added missing id field
+  ([`dd6ba1e`](https://github.com/Datateer/tap-freshservice/commit/dd6ba1ecd5cc09393c5d4444a5dd797ea5666e47))
+
+
 ## v0.10.0 (2025-01-29)
 
 ### Features
