@@ -21,6 +21,7 @@ class RequestersStream(FreshserviceStream):
         th.Property("external_id", th.IntegerType),
         th.Property("first_name", th.StringType),
         th.Property("has_logged_in", th.BooleanType),
+        th.Property("id", th.IntegerType),
         th.Property("is_agent", th.BooleanType),
         th.Property("language", th.StringType),
         th.Property("last_name", th.StringType),
