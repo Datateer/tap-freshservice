@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.12.0 (2025-05-15)
+
+### Features
+
+- Add ticket activities
+  ([`1e260f1`](https://github.com/Datateer/tap-freshservice/commit/1e260f13fbdea1561d8d80af7366a78049b05ecf))
+
+
 ## v0.11.0 (2025-05-15)
 
 ### Features
