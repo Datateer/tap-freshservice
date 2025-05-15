@@ -5,7 +5,7 @@ from __future__ import annotations
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
-from tap_freshservice.streams import (agents, assets, asset_types, asset_requests, departments, groups, locations, requesters, tickets)
+from tap_freshservice.streams import (agents, assets, asset_types, asset_requests, departments, groups, locations, requesters, tickets, time_entries)
 
 
 class TapFreshservice(Tap):
@@ -52,6 +52,7 @@ class TapFreshservice(Tap):
             locations.LocationsStream(self),
             requesters.RequestersStream(self),
             tickets.TicketsStream(self),
+            time_entries.TimeEntriesStream(self),
         ]
 
 

@@ -21,6 +21,13 @@ class TicketsStream(FreshserviceIncrementalStream):
         params.update(parent_params)
         return params
 
+    def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
+        """Return a context dictionary for the child streams.
+        Refer to https://sdk.meltano.com/en/latest/parent_streams.html"""
+        return {
+                "ticket_id": record["id"]
+            }
+    
     schema = th.PropertiesList(
         th.Property("subject", th.StringType),
         th.Property("group_id", th.IntegerType),
