@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.11.0 (2025-05-15)
+
+### Features
+
+- Added Time Entries
+  ([`c04943f`](https://github.com/Datateer/tap-freshservice/commit/c04943f544a66c9a8e9498e7f43988d88a21e3b2))
+
+
 ## v0.10.1 (2025-01-30)
 
 ### Bug Fixes
