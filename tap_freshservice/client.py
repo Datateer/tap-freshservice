@@ -2,65 +2,89 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterable
+import time
+from functools import cached_property
+from typing import Any
 from urllib.parse import parse_qsl
 
 import backoff
 import requests
-from singer_sdk.authenticators import BasicAuthenticator
-from singer_sdk.helpers.jsonpath import extract_jsonpath
+from requests.auth import HTTPBasicAuth
+from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.pagination import BaseAPIPaginator  # noqa: TCH002
 from singer_sdk.streams import RESTStream
 
 from tap_freshservice.paginator import FreshservicePaginator
 
+
 class FreshserviceStream(RESTStream):
     """Freshservice stream class."""
+
+    _last_request_at: float = 0.0
 
     @property
     def url_base(self) -> str:
         """Return the API URL root, configurable via tap settings."""
-        return self.config.get('url_base')  
+        return self.config.get("url_base")
 
-    @property
-    def authenticator(self) -> BasicAuthenticator:
-        """Return a new authenticator object.
-
-        Returns:
-            An authenticator instance.
-        """
-        return BasicAuthenticator.create_for_stream(
-            self,
-            username=self.config.get("api_key"),
+    @cached_property
+    def authenticator(self) -> HTTPBasicAuth:
+        """Return HTTP basic auth for the Freshservice API key."""
+        return HTTPBasicAuth(
+            username=str(self.config["api_key"]),
             password="X",
         )
 
     @property
     def http_headers(self) -> dict:
-        """Return the http headers needed.
-
-        Returns:
-            A dictionary of HTTP headers.
-        """
-        headers = {}
+        """Return the http headers needed."""
+        headers = super().http_headers
         if "user_agent" in self.config:
             headers["User-Agent"] = self.config.get("user_agent")
-        # If not using an authenticator, you may also provide inline auth headers:
-        # headers["Private-Token"] = self.config.get("auth_token")  # noqa: ERA001
         return headers
 
+    def _throttle(self) -> None:
+        """Pace requests to reduce Freshservice 429 rate-limit errors."""
+        delay = float(self.config.get("request_delay_seconds", 1.0))
+        if delay <= 0:
+            return
+
+        elapsed = time.monotonic() - FreshserviceStream._last_request_at
+        if elapsed < delay:
+            time.sleep(delay - elapsed)
+
+    def _request(
+        self,
+        prepared_request: requests.PreparedRequest,
+        context: dict | None,
+    ) -> requests.Response:
+        self._throttle()
+        try:
+            return super()._request(prepared_request, context)
+        finally:
+            FreshserviceStream._last_request_at = time.monotonic()
 
     def backoff_wait_generator(self):
-        """Try again every 10 seconds if we hit the 429 rate limit response code"""
+        """Retry using Retry-After when present, otherwise wait 10 seconds."""
         return backoff.constant(interval=10)
 
+    def backoff_handler(self, details: dict) -> None:
+        """Log backoff details and honor Retry-After on 429 responses."""
+        exception = details.get("exception")
+        if isinstance(exception, RetriableAPIError) and exception.response is not None:
+            retry_after = exception.response.headers.get("Retry-After")
+            if retry_after and retry_after.isdigit():
+                time.sleep(int(retry_after))
+
+        super().backoff_handler(details)
 
     def backoff_max_tries(self) -> int:
-        """retry 6 times, because the rate limit is per minute. This will guarantee to not hard fail, because after 60 seconds maximum, the rate limit resets"""
+        """Retry for up to one minute when rate limited."""
         return 6
 
     def get_new_paginator(self) -> BaseAPIPaginator:
         """Create a new pagination helper instance.
+
         Returns:
             A pagination helper instance.
         """
@@ -83,41 +107,45 @@ class FreshserviceStream(RESTStream):
         # 100 is the max page size https://api.freshservice.com/#pagination
         params: dict = {"per_page": "100"}
         if next_page_token:
-            params["page"] = dict(parse_qsl(next_page_token.query)).get('page')
+            params["page"] = dict(parse_qsl(next_page_token.query)).get("page")
 
         return params
 
-
-
-class FreshserviceIncrementalStream(FreshserviceStream):
-    replication_key = "updated_at"
-    is_sorted = True
-
-    def get_url_params(
+    def post_process(
         self,
-        context: dict | None,  # noqa: ARG002
-        next_page_token: Any | None,  # noqa: ANN401
-    ) -> dict[str, Any]:
-        """Return a dictionary of values to be used in URL parameterization.
+        row: dict,
+        context: dict | None = None,
+    ) -> dict | None:
+        """Truncate oversized string fields so Singer messages stay within limits."""
+        row = super().post_process(row, context)
+        if row is None:
+            return None
 
-        Args:
-            context: The stream context.
-            next_page_token: The next page index or value.
+        max_field_bytes = int(self.config.get("max_field_bytes", 1_048_576))
+        if max_field_bytes <= 0:
+            return row
 
-        Returns:
-            A dictionary of URL query parameters.
-        """
-        params: dict = {}
-        if self.replication_key:
-            params["order_type"] = "asc"
-            params["order_by"] = self.replication_key
-            starting_timestamp = self.get_starting_timestamp(context)
+        return self._truncate_values(row, max_field_bytes)
 
-            # By default only tickets that have been created within the past 30 days will be returned. For older tickets, use the updated_since filter.
-            if starting_timestamp:
-                params["updated_since"] = starting_timestamp.isoformat()
-            elif self.config.get('updated_since') is not None:
-                params["updated_since"] = self.config.get('updated_since')
+    @staticmethod
+    def _truncate_values(value: Any, max_field_bytes: int) -> Any:
+        if isinstance(value, str):
+            encoded = value.encode("utf-8")
+            if len(encoded) <= max_field_bytes:
+                return value
+            truncated = encoded[:max_field_bytes].decode("utf-8", errors="ignore")
+            return f"{truncated}...[truncated]"
 
-        params.update(super().get_url_params(context, next_page_token))
-        return params
+        if isinstance(value, dict):
+            return {
+                key: FreshserviceStream._truncate_values(item, max_field_bytes)
+                for key, item in value.items()
+            }
+
+        if isinstance(value, list):
+            return [
+                FreshserviceStream._truncate_values(item, max_field_bytes)
+                for item in value
+            ]
+
+        return value

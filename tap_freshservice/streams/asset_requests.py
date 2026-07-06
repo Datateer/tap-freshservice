@@ -23,4 +23,3 @@ class AssetRequestsStream(FreshserviceStream):
      ).to_dict()
     
     parent_stream_type = AssetsStream
-    ignore_parent_replication_key = True
