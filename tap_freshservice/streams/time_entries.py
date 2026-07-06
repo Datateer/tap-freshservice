@@ -33,4 +33,3 @@ class TimeEntriesStream(FreshserviceStream):
     ).to_dict()
 
     parent_stream_type = TicketsStream
-    ignore_parent_replication_key = True

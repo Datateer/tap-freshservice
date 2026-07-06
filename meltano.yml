@@ -1,7 +1,8 @@
-version: 1
 send_anonymous_usage_stats: true
 project_id: "tap-freshservice"
 default_environment: test
+elt:
+  buffer_size: 209715200  # 200 MiB; max Singer line size is half (100 MiB)
 environments:
   - name: test
 plugins:
@@ -10,7 +11,6 @@ plugins:
       namespace: "tap_freshservice"
       pip_url: -e .
       capabilities:
-        - state
         - catalog
         - discover
         - about
@@ -18,15 +18,15 @@ plugins:
       config:
         api_key: $TAP_FRESHSERVICE_API_KEY
         url_base: https://datateer.freshservice.com/api/v2
-        # start_date: '2023-08-14T20:00:00Z'
-        start_date: "2000-08-14T20:00:00Z"
-        flattening_enabled: true
-        flattening_max_depth: 3
+        ticket_lookback_days: 45
+        flattening_enabled: false
       settings:
         - name: api_key
           kind: password
-        - name: updated_since
-        - name: base_url
+        - name: url_base
+        - name: ticket_lookback_days
+      select:
+        - time_entries.*
   loaders:
     - name: target-jsonl
       variant: andyh1203

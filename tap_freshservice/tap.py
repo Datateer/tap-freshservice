@@ -22,17 +22,32 @@ class TapFreshservice(Tap):
             description="The Freshservice API key",
         ),
         th.Property(
-            "updated_since",
-            th.DateTimeType,
-            description="The earliest record date to sync. You probably need this! The Freshservice API only returns items less than 30 days old. To override this, you must include an 'updated_since' value in the URL querystring. Providing a value here will ensure this value is used if there is no state (i.e. for a full refresh). ",
-            default="2000-01-01T00:00:00Z"
+            "ticket_lookback_days",
+            th.IntegerType,
+            description=(
+                "Number of days of ticket updated_at history to request on each run. "
+                "Sent to Freshservice as the updated_since query parameter. Child "
+                "streams such as time_entries only run for tickets returned in this "
+                "window."
+            ),
+            default=45,
         ),
         th.Property(
-            "base_url",
+            "url_base",
             th.StringType,
             required=True,
             default="https://<replace with your org>.freshservice.com/api/v2",
             description="The url for the Freshservice API",
+        ),
+        th.Property(
+            "request_delay_seconds",
+            th.NumberType,
+            description=(
+                "Minimum seconds to wait between API requests. Increase this if you "
+                "see 429 rate-limit errors, especially on child streams like "
+                "time_entries."
+            ),
+            default=1.0,
         ),
     ).to_dict()
 

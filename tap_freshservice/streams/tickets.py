@@ -3,31 +3,48 @@
 from __future__ import annotations
 
 import typing as t
-from pathlib import Path
-from urllib.parse import urlencode
+from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
-from tap_freshservice.client import FreshserviceIncrementalStream
+from tap_freshservice.client import FreshserviceStream
 
-class TicketsStream(FreshserviceIncrementalStream):
+
+class TicketsStream(FreshserviceStream):
+    """Tickets are synced as full-table with an optional API list window.
+
+    Freshservice exposes ``updated_since`` only as a tickets list query parameter.
+    It filters on ticket ``updated_at`` and does not reflect child-stream activity
+    such as new time entries, so this stream does not use Singer incremental mode.
+    """
+
     name = "tickets"
     path = "/tickets"
-    records_jsonpath="$.tickets[*]"
+    records_jsonpath = "$.tickets[*]"
 
-    def get_url_params(self, context: dict | None, next_page_token) -> dict[str, t.Any] | str:
-        parent_params = super().get_url_params(context, next_page_token)
+    def get_url_params(
+        self,
+        context: dict | None,
+        next_page_token,
+    ) -> dict[str, t.Any] | str:
         params = {"include": "stats,tags"}
-        params.update(parent_params)
+        params.update(super().get_url_params(context, next_page_token))
+
+        updated_since = self._resolve_updated_since_filter()
+        params["updated_since"] = updated_since.isoformat()
+
         return params
 
+    def _resolve_updated_since_filter(self) -> datetime:
+        """Return the tickets list ``updated_since`` filter."""
+        lookback_days = int(self.config.get("ticket_lookback_days", 45))
+        return datetime.now(timezone.utc) - timedelta(days=lookback_days)
+
     def get_child_context(self, record: dict, context: Optional[dict]) -> dict:
-        """Return a context dictionary for the child streams.
-        Refer to https://sdk.meltano.com/en/latest/parent_streams.html"""
-        return {
-                "ticket_id": record["id"]
-            }
-    
+        """Return a context dictionary for the child streams."""
+        return {"ticket_id": record["id"]}
+
     schema = th.PropertiesList(
         th.Property("subject", th.StringType),
         th.Property("group_id", th.IntegerType),
@@ -89,4 +106,3 @@ class TicketsStream(FreshserviceIncrementalStream):
         )),
         th.Property("tags", th.StringType)
     ).to_dict()
-
